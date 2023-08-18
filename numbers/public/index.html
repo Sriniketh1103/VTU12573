@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Management Microservice</title>
+</head>
+<body>
+  <h1>Number Management Microservice</h1>
+  
+  <label for="urls">Enter URLs (separated by commas):</label>
+  <input type="text" id="urls" style="width: 80%;"><br><br>
+  
+  <button onclick="fetchNumbers()">Fetch Numbers</button>
+  
+  <h2>Response:</h2>
+  <pre id="response"></pre>
+  
+  <script>
+    function fetchNumbers() {
+      const urlsInput = document.getElementById('urls');
+      const responseOutput = document.getElementById('response');
+      
+      const urls = urlsInput.value.split('&').map(url => url.trim());
+      
+      responseOutput.textContent = ''; // Clear previous responses
+      
+      
+      for (const url of urls) {
+        fetch(`/numbers?url=${encodeURIComponent(url)}`)
+          .then(response => response.json())
+          .then(data => {
+            responseOutput.textContent += `Response from ${url}:\n${JSON.stringify(data, null, 2)}\n\n`;
+          })
+          .catch(error => {
+            responseOutput.textContent += `Error from ${url}: ${error.message}\n\n`;
+          });
+      }
+    }
+  </script>
+</body>
+</html>
